@@ -4,12 +4,20 @@ project(mongodb_log)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED rospy roslib rosgraph rostopic tf sensor_msgs mongodb_store libmongocxx_ros)
+find_package(catkin REQUIRED rospy roslib rosgraph rostopic tf sensor_msgs mongodb_store libmongocxx_ros designator_integration_cpp designator_integration_msgs)
 
 ## System dependencies are found with CMake's conventions
 find_package(Boost REQUIRED COMPONENTS system thread filesystem)
 
+set(COMPILE_DEBUG 0)
 
+if(CMAKE_COMPILER_IS_GNUCXX)
+  if(COMPILE_DEBUG)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pg")
+  else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O2")
+  endif()
+endif()
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
@@ -48,10 +56,9 @@ find_package(Boost REQUIRED COMPONENTS system thread filesystem)
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES mongodb_log
-#  CATKIN_DEPENDS other_catkin_pkg
-#  DEPENDS system_lib
+  INCLUDE_DIRS ${catkin_INCLUDE_DIRS}
+  LIBRARIES
+  CATKIN_DEPENDS roscpp roslib designator_integration_cpp designator_integration_msgs
 )
 
 ###########
@@ -69,6 +76,7 @@ include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 
 #link_libraries(mongoclient)
 add_executable(mongodb_log_tf src/mongodb_log_tf.cpp)
+add_executable(mongodb_log_desig src/mongodb_log_desig.cpp)
 add_executable(mongodb_log_pcl src/mongodb_log_pcl.cpp)
 add_executable(mongodb_log_cimg src/mongodb_log_cimg.cpp)
 
@@ -88,6 +96,13 @@ target_link_libraries(mongodb_log_pcl
   ${Boost_LIBRARIES}
 )
 target_link_libraries(mongodb_log_cimg
+  ${catkin_LIBRARIES}
+  mongoclient
+  ssl
+  crypto
+  ${Boost_LIBRARIES}
+)
+target_link_libraries(mongodb_log_desig
   ${catkin_LIBRARIES}
   mongoclient
   ssl
@@ -129,7 +144,7 @@ install(PROGRAMS
 
 
 ## Mark executables and/or libraries for installation
-install(TARGETS mongodb_log_tf mongodb_log_cimg mongodb_log_pcl
+install(TARGETS mongodb_log_tf mongodb_log_cimg mongodb_log_pcl mongodb_log_desig
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

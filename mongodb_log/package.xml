@@ -11,6 +11,7 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
+  <build_depend>roscpp</build_depend>
   <build_depend>rospy</build_depend>
   <build_depend>roslib</build_depend>
   <build_depend>rosgraph</build_depend>
@@ -20,7 +21,10 @@
   <build_depend>libmongocxx_ros</build_depend>
   <build_depend>libssl-dev</build_depend>
   <build_depend>mongodb_store</build_depend>
+  <build_depend>designator_integration_cpp</build_depend>
+  <build_depend>designator_integration_msgs</build_depend>
 
+  <run_depend>roscpp</run_depend>
   <run_depend>rospy</run_depend>
   <run_depend>roslib</run_depend>
   <run_depend>rosgraph</run_depend>
@@ -30,6 +34,8 @@
   <run_depend>libmongocxx_ros</run_depend>
   <run_depend>python-pymongo</run_depend>
   <run_depend>mongodb_store</run_depend>
+  <run_depend>designator_integration_cpp</run_depend>
+  <run_depend>designator_integration_msgs</run_depend>
 
   <export>
   </export>
